@@ -1,13 +1,13 @@
-# API Starter Kit.
+# Raypyd Hack - API
 
-Start your backend api services with minimal efforts using `Nodejs` `Expressjs` `Postgresql` `Prisma ORM`
+> There are some changes I'll be making to this repo, make sure you pull updated changes using `git pull`. then add your changes before pushing.
 
 # Setup
 
 - ## Clone the repo
 
 ```js
-    git clone https://github.com/FlixMenu/api-starter-kit.git
+    git clone https://github.com/Benrobo/Rapyd-Payment-api.git
 ```
 
 - ## Install all dependencies
@@ -49,7 +49,5 @@ Start your backend api services with minimal efforts using `Nodejs` `Expressjs` 
 - It creates a new SQL migration file for this migration
 
 - It runs the SQL migration file against the database
-
-## Congratulation, you can now start exploring and adding other features 🚀.
 
 ### This repo is open for contribution.
