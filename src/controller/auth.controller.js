@@ -1,5 +1,5 @@
 import prismaDB from "../config/prisma";
-import { genHash, compareHash } from "../helpers/util";
+import { genHash, compareHash } from "../helpers/";
 import customRequestError from "../helpers/response";
 import sendResponse from "../helpers/response";
 import { validateEmail } from "../utils/validate";
@@ -56,9 +56,35 @@ export default class AuthControler {
       },
     });
 
-    console.log(userData);
-    // log the user in
-    // const refreshToken = genRf
+    if (!compareHash(password, userData?.hash))
+      return sendResponse(res, 400, false, "password given is incorrect");
+
+    try {
+      const userPayload = {
+        id: userData?.id,
+        email: userData?.email,
+      };
+      const refreshToken = genRefreshToken(userPayload);
+      const accessToken = genAccessToken(userPayload);
+
+      await prismaDB.user.update({
+        where: {
+          email,
+        },
+        data: {
+          refreshToken,
+        },
+      });
+
+      return sendResponse(res, 201, true, "Logged In successfull", {
+        ...userPayload,
+        accessToken,
+      });
+    } catch (e) {
+      sendResponse(res, 500, false, "something went wrong logging in", {
+        error: e.message,
+      });
+    }
   }
 
   async register(res, payload) {
@@ -115,6 +141,7 @@ export default class AuthControler {
           username,
           email,
           refreshToken: "",
+          hash: genHash(password),
         },
       });
 
@@ -126,7 +153,9 @@ export default class AuthControler {
         savedData
       );
     } catch (e) {
-      sendResponse(res, 500, false, "something went wrong registering user", e);
+      sendResponse(res, 500, false, "something went wrong registering user", {
+        error: e.message,
+      });
     }
   }
 }

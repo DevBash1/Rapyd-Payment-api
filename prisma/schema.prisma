@@ -9,9 +9,10 @@ generator client {
 
 model User {
 
-  id             String           @id
+  id             String @id @unique
   username       String
-  email          String
+  email          String @unique
+  hash          String
   refreshToken   String?
   store          Store[]
   paymentLinks   PaymentLinks[]
