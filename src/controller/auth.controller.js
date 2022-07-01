@@ -62,6 +62,7 @@ export default class AuthControler {
     try {
       const userPayload = {
         id: userData?.id,
+        username: userData?.username,
         email: userData?.email,
       };
       const refreshToken = genRefreshToken(userPayload);
