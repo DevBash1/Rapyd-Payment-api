@@ -1,0 +1,1 @@
+// calculate rapyd signature before making request to create a valid wallet.
