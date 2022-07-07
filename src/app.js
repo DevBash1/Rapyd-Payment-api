@@ -5,15 +5,16 @@ import { customlimiter } from "./middlewares/rateLimiting";
 import { MAX_API_REQUEST } from "./config";
 import authRouter from "./routes/auth.router";
 import walletRouter from "./routes/wallets.router";
+import Fetch from "./utils/fetch";
 
 const app = express();
 
 // Middlewares
-app.use(cors({
-  credentials: true,
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
-}));
+// app.use(cors({
+//   credentials: true,
+//   origin: "*",
+//   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+// }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -24,6 +25,37 @@ app.get("/", (req, res) => {
   res.send(`WELCOME`);
 });
 
+
+// test rapyd api
+app.get('/country', async (req, res) => {
+
+  try {
+    const result = await Fetch('GET', '/v1/payment_methods/country?country=mx');
+
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+
+})
+
+app.get('/payment', async (req, res) => {
+
+  try {
+    const body = {
+      amount: 230,
+      currency: 'MXN',
+      payment_method: {
+        type: 'mx_diestel_cash'
+      }
+    };
+    const result = await Fetch('POST', '/v1/payments', body);
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+
+})
 
 // Authentication
 app.use("/api/auth", authRouter);
