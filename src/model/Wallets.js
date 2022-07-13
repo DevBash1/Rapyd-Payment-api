@@ -6,7 +6,7 @@ const walletSchema = new Schema({
     email: { type: String, unique: true },
     hash: { type: String },
     token: { type: String }
-})
+}, { versionKey: false })
 
 const Wallets = model('Wallets', walletSchema);
 

@@ -67,7 +67,7 @@ app.use("/api/wallet", walletRouter)
 
 const PORT = process.env.PORT || 8080;
 
-const LOCAL_DB = "local mongodb url"
+const LOCAL_DB = "mongodb://localhost:27017/raypal"
 
 const DB_URL = process.env.NODE_ENV == "development" ? LOCAL_DB : DATABASE_URL
 

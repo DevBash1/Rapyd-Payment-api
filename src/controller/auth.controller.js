@@ -36,16 +36,18 @@ export default class AuthControler {
 
     const userExistsResult = await User.find({ email })
 
-    if (userExistsResult === null)
+    if (userExistsResult.length === 0)
       return sendResponse(
         res,
         404,
         false,
-        "user with this email address doesnt exists"
+        "No user with this email address exists."
       );
 
     // check if password is correct
-    const userData = await User.find({ email });
+    const userData = await User.findOne({ email });
+
+    console.log(userData);
 
     if (!compareHash(password, userData?.hash))
       return sendResponse(res, 400, false, "password given is incorrect");
@@ -62,13 +64,14 @@ export default class AuthControler {
       const filter = { email };
       const update = { token: refreshToken };
 
-      await User.findByIdAndUpdate(filter, update)
+      await User.findOneAndUpdate(filter, update)
 
       return sendResponse(res, 201, true, "Logged In successfull", {
         ...userPayload,
         accessToken,
       });
     } catch (e) {
+      console.log(e);
       sendResponse(res, 500, false, "something went wrong logging in", {
         error: e.message,
       });
@@ -108,7 +111,7 @@ export default class AuthControler {
     // check if user with this email address already exists
     const userExistsResult = await User.find({ email })
 
-    if (!userExistsResult && Object.entries(userExistsResult).length > 0)
+    if (userExistsResult.length > 0)
       return sendResponse(
         res,
         400,

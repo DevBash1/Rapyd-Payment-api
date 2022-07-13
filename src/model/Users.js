@@ -7,7 +7,7 @@ const userSchema = new Schema({
     email: { type: String, unique: true },
     hash: { type: String },
     token: { type: String }
-})
+}, { versionKey: false })
 
 const User = model('User', userSchema);
 

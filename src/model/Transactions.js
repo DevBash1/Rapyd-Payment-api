@@ -6,7 +6,7 @@ const transactionsSchema = new Schema({
     email: { type: String, unique: true },
     hash: { type: String },
     token: { type: String }
-})
+}, { versionKey: false })
 
 const Transactions = model('Transactions', transactionsSchema);
 
