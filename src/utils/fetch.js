@@ -6,17 +6,15 @@ const accessKey = RAPYD_ACCESS_KEY;
 const secretKey = RAPYD_SECRET_KEY;
 const log = false;
 
-// console.log({ accessKey, secretKey });
-
 async function Fetch(method, urlPath, body = null) {
 
     try {
         let httpMethod = method;
-        let httpBaseURL = "sandboxapi.rapyd.net";
+        let httpBaseURL = "https://sandboxapi.rapyd.net";
         let httpURLPath = urlPath;
         let salt = generateRandomString(8);
         let idempotency = new Date().getTime().toString();
-        let timestamp = Math.round(new Date().getTime() / 1000);
+        let timestamp = (Math.floor(new Date().getTime() / 1000) - 10).toString(); // Current Unix time (seconds).
         let signature = sign(httpMethod, httpURLPath, salt, timestamp, body)
 
         const options = {

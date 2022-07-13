@@ -1,6 +1,5 @@
-import prismaDB from "../config/prisma";
+import { User } from "../model"
 import { genHash, compareHash } from "../helpers/";
-import customRequestError from "../helpers/response";
 import sendResponse from "../helpers/response";
 import { validateEmail } from "../utils/validate";
 import { genAccessToken, genRefreshToken } from "../helpers/token";
@@ -35,11 +34,7 @@ export default class AuthControler {
 
     // check if user with this email address already exists
 
-    const userExistsResult = await prismaDB.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    const userExistsResult = await User.find({ email })
 
     if (userExistsResult === null)
       return sendResponse(
@@ -50,11 +45,7 @@ export default class AuthControler {
       );
 
     // check if password is correct
-    const userData = await prismaDB.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    const userData = await User.find({ email });
 
     if (!compareHash(password, userData?.hash))
       return sendResponse(res, 400, false, "password given is incorrect");
@@ -68,14 +59,10 @@ export default class AuthControler {
       const refreshToken = genRefreshToken(userPayload);
       const accessToken = genAccessToken(userPayload);
 
-      await prismaDB.user.update({
-        where: {
-          email,
-        },
-        data: {
-          refreshToken,
-        },
-      });
+      const filter = { email };
+      const update = { token: refreshToken };
+
+      await User.findByIdAndUpdate(filter, update)
 
       return sendResponse(res, 201, true, "Logged In successfull", {
         ...userPayload,
@@ -119,31 +106,24 @@ export default class AuthControler {
       return sendResponse(res, 400, false, "email given is invalid");
 
     // check if user with this email address already exists
+    const userExistsResult = await User.find({ email })
 
-    const userExistsResult = await prismaDB.user.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (userExistsResult !== null)
+    if (!userExistsResult && Object.entries(userExistsResult).length > 0)
       return sendResponse(
         res,
-        404,
+        400,
         false,
-        "user with this email address already exists"
+        "user with this email already exists"
       );
 
     try {
       // save data
-      const savedData = await prismaDB.user.create({
-        data: {
-          id: genId(),
-          username,
-          email,
-          refreshToken: "",
-          hash: genHash(password),
-        },
+      const savedData = await User.create({
+        id: genId(),
+        username,
+        email,
+        token: "",
+        hash: genHash(password),
       });
 
       return sendResponse(
