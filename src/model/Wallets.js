@@ -2,10 +2,14 @@ const { model, Schema } = require("mongoose")
 
 
 const walletSchema = new Schema({
-    username: { type: String, default: null },
-    email: { type: String, unique: true },
-    hash: { type: String },
-    token: { type: String }
+    id: { type: String, unique: true },
+    userId: { type: String },
+    wId: { type: String },
+    wName: { type: String },
+    wAddr: { type: String },
+    totalBalance: { type: String },
+    verified: { type: Boolean },
+    createdAt: { type: String }
 }, { versionKey: false })
 
 const Wallets = model('Wallets', walletSchema);

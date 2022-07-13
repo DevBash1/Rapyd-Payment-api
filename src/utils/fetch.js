@@ -10,7 +10,7 @@ async function Fetch(method, urlPath, body = null) {
 
     try {
         let httpMethod = method;
-        let httpBaseURL = "https://sandboxapi.rapyd.net";
+        let httpBaseURL = "sandboxapi.rapyd.net";
         let httpURLPath = urlPath;
         let salt = generateRandomString(8);
         let idempotency = new Date().getTime().toString();
