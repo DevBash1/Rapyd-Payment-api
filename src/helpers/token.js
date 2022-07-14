@@ -16,6 +16,10 @@ function genRefreshToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1yr" });
 }
 
+function verifyToken(payload) {
+  return jwt.verify(payload, JWT_SECRET)
+}
+
 const decodeJwt = (token = "") => {
   let res = {};
   if (token === "" || token === undefined) {
@@ -39,5 +43,6 @@ const decodeJwt = (token = "") => {
 
 module.exports = {
   genAccessToken,
-  genRefreshToken
+  genRefreshToken,
+  verifyToken
 }

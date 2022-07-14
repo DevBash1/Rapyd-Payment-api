@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const { JWT_SECRET } = require("../config")
 
 function isLoggedIn(req, res, next) {
-    return next();
+    // return next();
     let tokens = req.headers["authorization"];
 
     if (!tokens) {
@@ -12,6 +12,7 @@ function isLoggedIn(req, res, next) {
         let bearer = tokens.split(" ")[1];
         let decode = jwt.verify(bearer, JWT_SECRET)
         req.user = decode;
+        res.user = decode;
         next()
     } catch (e) {
         console.log(e)

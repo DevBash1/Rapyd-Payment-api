@@ -13,5 +13,12 @@ Router.post("/create", isLoggedIn, (req, res) => {
     Wallet.createWallet(res, payload);
 });
 
+// get
+
+Router.post("/get/:ewallet", isLoggedIn, (req, res) => {
+    const payload = req.params.ewallet;
+    Wallet.getWallet(res, payload);
+});
+
 
 module.exports = Router
