@@ -33,7 +33,6 @@ class AuthControler {
       return sendResponse(res, 400, false, "email given is invalid");
 
     // check if user with this email address already exists
-
     const userExistsResult = await User.find({ email })
 
     if (userExistsResult.length === 0)
@@ -46,8 +45,6 @@ class AuthControler {
 
     // check if password is correct
     const userData = await User.findOne({ email });
-
-    console.log(userData);
 
     if (!compareHash(password, userData?.hash))
       return sendResponse(res, 400, false, "password given is incorrect");
