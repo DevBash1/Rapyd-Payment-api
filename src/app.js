@@ -13,7 +13,7 @@ const walletRouter = require("./routes/wallets.router")
 const Fetch = require("./utils/fetch")
 const { DATABASE_URL } = require("./config")
 const mongoose = require("mongoose")
-require("dotenv").config({path: "./.env.development"})
+require("dotenv").config({ path: "./.env.development" })
 
 // Middlewares
 app.use(cors({
@@ -44,7 +44,7 @@ app.use("/api/wallet", walletRouter)
 
 const PORT = process.env.PORT || 8080;
 
-const LOCAL_DB = "mongodb://0.0.0.0:27017"
+const LOCAL_DB = "mongodb://0.0.0.0:27017/raypal"
 
 const DB_URL = process.env.NODE_ENV == "development" ? LOCAL_DB : DATABASE_URL
 

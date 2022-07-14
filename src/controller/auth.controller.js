@@ -1,8 +1,9 @@
-const { User } = require("../model");
-const { genId, genHash, compareHash } = require("../helpers");
-const sendResponse = require("../helpers/response");
-const { validateEmail, validatePhonenumber } = require("../utils/validate");
-const { genAccessToken, genRefreshToken } = require("../helpers/token");
+const { User } = require("../model")
+const { genHash, compareHash, genId } = require("../helpers")
+const sendResponse = require("../helpers/response")
+const { validateEmail, validatePhonenumber } = require("../utils/validate")
+const { genAccessToken, genRefreshToken } = require("../helpers/token")
+
 
 class AuthControler {
     async login(res, payload) {
