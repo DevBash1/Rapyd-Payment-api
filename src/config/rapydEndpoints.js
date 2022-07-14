@@ -4,7 +4,7 @@
 
 module.exports = {
     // RAPYD WALLETS SECTION
-    fetchWalletById: `/v1/user/:ewallet_id`,
+    // fetchWalletById: `/v1/user/:ewallet_id`,
     createPersonalWallet: `/v1/user`,
     createCompanyWallet: `/v1/user`,
     updateWallet: `/v1/user`,
