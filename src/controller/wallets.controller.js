@@ -9,11 +9,14 @@ const { createPersonalWallet, createCompanyWallet } = require("../config/rapydEn
 class WalletController {
 
     async createWallet(res, payload) {
-        console.log(payload);
-        let result = await Fetch("POST","/v1/user",payload);
-        let message = result.statusCode == 200 ? "wallet created successfully" : "failed to create wallet";
-        let status = result.statusCode == 200 ? true : false;
-        sendResponse(res,result.statusCode,status,message,result.body.data);
+        try {
+            let result = await Fetch("POST", "/v1/user", payload);
+            let message = result.statusCode == 200 ? "wallet created successfully" : "failed to create wallet";
+            let status = result.statusCode == 200 ? true : false;
+            sendResponse(res, result.statusCode, status, message, result.body.data);
+        } catch (e) {
+            sendResponse(res, 500, false, "Seomthing went wrong creating wallet. Tty later");
+        }
     }
 
     async getWallet(res, payload) {
