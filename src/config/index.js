@@ -1,6 +1,8 @@
 const dotenv = require("dotenv")
 
-dotenv.config({path: "./.env.development"});
+const devEnv = process.env.NODE_ENV === "development" ? `./.env.development` : `./.env`
+
+dotenv.config({ path: devEnv });
 
 const JWT_SECRET = process.env.JWT_SECRET;
 

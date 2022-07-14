@@ -1,5 +1,5 @@
 const { User } = require("../model")
-const { genHash, compareHash } = require("../helpers")
+const { genHash, compareHash, genId } = require("../helpers")
 const sendResponse = require("../helpers/response")
 const { validateEmail, validatePhonenumber } = require("../utils/validate")
 const { genAccessToken, genRefreshToken } = require("../helpers/token")
