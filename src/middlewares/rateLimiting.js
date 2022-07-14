@@ -1,9 +1,9 @@
 
-import { rateLimit } from "express-rate-limit";
-import { MAX_API_REQUEST } from "../config"
+const { MAX_API_REQUEST } = require("../config")
+const rateLimit = require("express-rate-limit")
 
 
-export const customlimiter = rateLimit({
+const customlimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 min
     max: MAX_API_REQUEST, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
     message: `You have exceeded the ${MAX_API_REQUEST} requests!`,
@@ -14,3 +14,7 @@ export const customlimiter = rateLimit({
     //     next()
     // }
 })
+
+module.exports = {
+    customlimiter
+}

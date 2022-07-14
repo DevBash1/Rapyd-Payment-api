@@ -1,12 +1,19 @@
-import { randomUUID } from "crypto";
-import bcryptjs from "bcryptjs";
+const { randomUUID } = require("crypto");
+const bcryptjs = require("bcryptjs");
 
-export const genId = () => randomUUID();
+const genId = () => randomUUID();
 
-export const genHash = (salt = 10, string) => {
+const genHash = (salt = 10, string) => {
   return bcryptjs.hashSync(salt, string);
 };
 
-export const compareHash = (string, hash) => {
+const compareHash = (string, hash) => {
   return bcryptjs.compareSync(string, hash);
 };
+
+
+module.exports = {
+  genId,
+  genHash,
+  compareHash
+}

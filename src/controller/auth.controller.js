@@ -1,11 +1,11 @@
-import { User } from "../model"
-import { genHash, compareHash } from "../helpers/";
-import sendResponse from "../helpers/response";
-import { validateEmail } from "../utils/validate";
-import { genAccessToken, genRefreshToken } from "../helpers/token";
-import { genId } from "../helpers";
+const { User } = require("../model")
+const { genHash, compareHash } = require("../helpers")
+const sendResponse = require("../helpers/response")
+const { validateEmail, validatePhonenumber } = require("../utils/validate")
+const { genAccessToken, genRefreshToken } = require("../helpers/token")
 
-export default class AuthControler {
+
+class AuthControler {
   async login(res, payload) {
     if (res === undefined) {
       throw new Error("expected a valid 'res' object but got none ");
@@ -143,3 +143,5 @@ export default class AuthControler {
     }
   }
 }
+
+module.exports = AuthControler

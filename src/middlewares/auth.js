@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
+const jwt = require("jsonwebtoken")
+const { JWT_SECRET } = require("../config")
 
 function isLoggedIn(req, res, next) {
     let tokens = req.headers["authorization"];
@@ -19,4 +19,4 @@ function isLoggedIn(req, res, next) {
 }
 
 
-export default isLoggedIn
+module.exports = isLoggedIn

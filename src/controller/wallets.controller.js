@@ -1,12 +1,12 @@
-import { User, Wallets } from "../model"
-import { genHash, compareHash } from "../helpers/";
-import sendResponse from "../helpers/response";
-import { validateEmail } from "../utils/validate";
-import { genId } from "../helpers";
-import Fetch from "../utils/fetch"
+const { User, Wallets } = require("../model")
+const { genHash, compareHash } = require("../helpers")
+const sendResponse = require("../helpers/response")
+const { validateEmail, validatePhonenumber } = require("../utils/validate")
+const { genAccessToken, genRefreshToken } = require("../helpers/token")
+const Fetch = require("../utils/fetch")
 
 
-export default class WalletController {
+class WalletController {
 
     async createWallet(res, payload) {
 
@@ -16,3 +16,5 @@ export default class WalletController {
 
     }
 }
+
+module.exports = WalletController

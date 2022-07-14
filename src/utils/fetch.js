@@ -1,6 +1,6 @@
-import https from "https"
-import crypto from "crypto"
-import { RAPYD_ACCESS_KEY, RAPYD_SECRET_KEY } from "../config"
+const https = require("https")
+const crypto = require("crypto")
+const { RAPYD_ACCESS_KEY, RAPYD_SECRET_KEY } = require("../config")
 
 const accessKey = RAPYD_ACCESS_KEY;
 const secretKey = RAPYD_SECRET_KEY;
@@ -41,7 +41,7 @@ async function Fetch(method, urlPath, body = null) {
 
 }
 
-export default Fetch
+module.exports = Fetch
 
 
 function sign(method, urlPath, salt, timestamp, body) {

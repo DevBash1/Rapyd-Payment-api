@@ -1,6 +1,6 @@
-import express from "express";
-import WalletController from "../controller/wallets.controller";
-import isLoggedIn from "../middlewares/auth"
+const express = require("express");
+const WalletController = require("../controller/wallets.controller");
+const isLoggedIn = require("../middlewares/auth")
 
 const Router = express.Router();
 
@@ -14,4 +14,4 @@ Router.post("/create", isLoggedIn, (req, res) => {
 });
 
 
-export default Router;
+module.exports = Router

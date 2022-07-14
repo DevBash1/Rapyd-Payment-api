@@ -14,4 +14,4 @@ const walletSchema = new Schema({
 
 const Wallets = model('Wallets', walletSchema);
 
-export default Wallets
+module.exports = Wallets

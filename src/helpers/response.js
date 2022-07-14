@@ -1,6 +1,6 @@
-import httpStatus from "http-status";
+const httpStatus = require("http-status");
 
-export default function sendResponse(
+function sendResponse(
   res,
   status = 400,
   success = true,
@@ -16,3 +16,5 @@ export default function sendResponse(
 
   return res.status(status).json(response);
 }
+
+module.exports = sendResponse

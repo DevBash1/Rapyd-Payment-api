@@ -1,14 +1,18 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import { customlimiter } from "./middlewares/rateLimiting";
-import authRouter from "./routes/auth.router";
-import walletRouter from "./routes/wallets.router";
-import Fetch from "./utils/fetch";
-import { DATABASE_URL } from "./config"
-import mongoose from "mongoose"
-
+const express = require("express")
+const bodyParser = require("body-parser")
+const cors = require("cors")
 const app = express();
+const http = require("http")
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+const { customlimiter } = require("./middlewares/rateLimiting")
+const authRouter = require("./routes/auth.router")
+const walletRouter = require("./routes/wallets.router")
+const Fetch = require("./utils/fetch")
+const { DATABASE_URL } = require("./config")
+const mongoose = require("mongoose")
 
 // Middlewares
 app.use(cors({
@@ -26,37 +30,42 @@ app.get("/", (req, res) => {
   res.send(`WELCOME`);
 });
 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
+
 
 // test rapyd api
-app.get('/country', async (req, res) => {
+// app.get('/country', async (req, res) => {
 
-  try {
-    const result = await Fetch('GET', '/v1/payment_methods/country?country=mx');
+//   try {
+//     const result = await Fetch('GET', '/v1/payment_methods/country?country=mx');
 
-    res.json(result);
-  } catch (error) {
-    res.json(error);
-  }
+//     res.json(result);
+//   } catch (error) {
+//     res.json(error);
+//   }
 
-})
+// })
 
-app.get('/payment', async (req, res) => {
+// app.get('/payment', async (req, res) => {
 
-  try {
-    const body = {
-      amount: 230,
-      currency: 'MXN',
-      payment_method: {
-        type: 'mx_diestel_cash'
-      }
-    };
-    const result = await Fetch('POST', '/v1/payments', body);
-    res.json(result);
-  } catch (error) {
-    res.json(error);
-  }
+//   try {
+//     const body = {
+//       amount: 230,
+//       currency: 'MXN',
+//       payment_method: {
+//         type: 'mx_diestel_cash'
+//       }
+//     };
+//     const result = await Fetch('POST', '/v1/payments', body);
+//     res.json(result);
+//   } catch (error) {
+//     res.json(error);
+//   }
 
-})
+// })
 
 // Authentication
 app.use("/api/auth", authRouter);
@@ -73,7 +82,7 @@ const DB_URL = process.env.NODE_ENV == "development" ? LOCAL_DB : DATABASE_URL
 
 mongoose.connect(DB_URL, { useNewUrlParser: true }).then((res) => {
   console.log("MONGODB CONNECTED")
-  return app.listen(PORT, () => {
+  return server.listen(PORT, () => {
     console.log(`Server listening @ http://localhost:${PORT}`);
   })
 

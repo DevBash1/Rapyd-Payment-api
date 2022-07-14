@@ -13,4 +13,4 @@ const paymentLinksSchema = new Schema({
 
 const PaymentLinks = model('PaymentLinks', paymentLinksSchema);
 
-export default PaymentLinks
+module.exports = PaymentLinks

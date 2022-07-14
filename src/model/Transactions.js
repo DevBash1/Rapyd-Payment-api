@@ -14,4 +14,4 @@ const transactionSchema = new Schema({
 
 const Transactions = model('Transactions', transactionSchema);
 
-export default Transactions
+module.exports = Transactions

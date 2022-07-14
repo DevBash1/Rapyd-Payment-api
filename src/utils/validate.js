@@ -1,11 +1,11 @@
-export function validatePhonenumber(phoneNumber) {
+function validatePhonenumber(phoneNumber) {
   if (!phoneNumber) return false;
   const regexp =
     /^\+{0,2}([\-\. ])?(\(?\d{0,3}\))?([\-\. ])?\(?\d{0,3}\)?([\-\. ])?\d{3}([\-\. ])?\d{4}/;
   return regexp.test(phoneNumber);
 }
 
-export function validateEmail(email) {
+function validateEmail(email) {
   const tester =
     /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
@@ -32,4 +32,9 @@ export function validateEmail(email) {
   if (!tester.test(email)) return false;
 
   return true;
+}
+
+module.exports = {
+  validateEmail,
+  validatePhonenumber
 }

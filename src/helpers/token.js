@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
 
-export function genAccessToken(payload) {
+function genAccessToken(payload) {
   if (payload === "" || payload === undefined) {
     return this.Error("Access token requires a payload field but got none");
   }
@@ -9,14 +9,14 @@ export function genAccessToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
 }
 
-export function genRefreshToken(payload) {
+function genRefreshToken(payload) {
   if (payload === "" || payload === undefined) {
     return this.Error("Refresh token requires a payload field but got none");
   }
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1yr" });
 }
 
-export const decodeJwt = (token = "") => {
+const decodeJwt = (token = "") => {
   let res = {};
   if (token === "" || token === undefined) {
     res.id = null;
@@ -36,3 +36,8 @@ export const decodeJwt = (token = "") => {
   res.message = "success";
   return res;
 };
+
+module.exports = {
+  genAccessToken,
+  genRefreshToken
+}
