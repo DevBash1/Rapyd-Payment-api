@@ -13,6 +13,7 @@ const walletRouter = require("./routes/wallets.router")
 const Fetch = require("./utils/fetch")
 const { DATABASE_URL } = require("./config")
 const mongoose = require("mongoose")
+require("dotenv").config({path: "./.env.development"})
 
 // Middlewares
 app.use(cors({
@@ -34,39 +35,6 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
-
-
-// test rapyd api
-// app.get('/country', async (req, res) => {
-
-//   try {
-//     const result = await Fetch('GET', '/v1/payment_methods/country?country=mx');
-
-//     res.json(result);
-//   } catch (error) {
-//     res.json(error);
-//   }
-
-// })
-
-// app.get('/payment', async (req, res) => {
-
-//   try {
-//     const body = {
-//       amount: 230,
-//       currency: 'MXN',
-//       payment_method: {
-//         type: 'mx_diestel_cash'
-//       }
-//     };
-//     const result = await Fetch('POST', '/v1/payments', body);
-//     res.json(result);
-//   } catch (error) {
-//     res.json(error);
-//   }
-
-// })
-
 // Authentication
 app.use("/api/auth", authRouter);
 
@@ -76,7 +44,7 @@ app.use("/api/wallet", walletRouter)
 
 const PORT = process.env.PORT || 8080;
 
-const LOCAL_DB = "mongodb://localhost:27017/raypal"
+const LOCAL_DB = "mongodb://0.0.0.0:27017"
 
 const DB_URL = process.env.NODE_ENV == "development" ? LOCAL_DB : DATABASE_URL
 
