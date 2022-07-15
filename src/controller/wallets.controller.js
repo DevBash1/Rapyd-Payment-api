@@ -54,10 +54,9 @@ class WalletController {
                     status: "unverified",
                     createdAt: Date.now(),
                 });
-                console.log(savedData);
             }
         } catch (e) {
-            sendResponse(res, 500, false, "Something went wrong", {}, {});
+            sendResponse(res, 500, false, `Something went wrong: ${e.body.status.message}`, {}, {});
         }
     }
 
@@ -110,7 +109,7 @@ class WalletController {
         }
     }
 
-    async verifyIdentity(res, payload) {}
+    async verifyIdentity(res, payload) { }
 }
 
 module.exports = WalletController;
