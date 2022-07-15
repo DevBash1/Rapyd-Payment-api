@@ -60,15 +60,15 @@ class WalletController {
         }
     }
 
-    async getWallet(res, payload) {
-        const getUser = await Wallets.findOne({ userId: payload });
+    async getWallet(res, id) {
+        const getUser = await Wallets.findOne({ userId: id });
 
         if (getUser) {
-            payload = getUser.wId;
+            id = getUser.wId;
         }
 
         try {
-            let result = await Fetch("GET", "/v1/user/" + payload);
+            let result = await Fetch("GET", "/v1/user/" + id);
             let message =
                 result.statusCode == 200
                     ? "wallet retrieved successfully"
