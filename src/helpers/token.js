@@ -13,7 +13,6 @@ function genRefreshToken(payload) {
   if (payload === "" || payload === undefined) {
     return this.Error("Refresh token requires a payload field but got none");
   }
-  console.log(JWT_SECRET);
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1yr" });
 }
 
