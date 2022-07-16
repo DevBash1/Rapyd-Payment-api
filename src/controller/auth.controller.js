@@ -10,6 +10,25 @@ const {
 const Fetch = require("../utils/fetch");
 
 class AuthControler {
+
+    #parseUserName(username) {
+        const parse = username.split(" ")
+        let firstName = parse[0];
+        let lastName = parse.length > 1 ? parse[1] : "";
+        return { firstName, lastName }
+    }
+
+    #genUniqueNumber(count = 6) {
+        const nums = "1234567890".split("")
+        let uniqueNum = "";
+
+        Array(count).fill(count).forEach((num) => {
+            const rand = Math.floor(Math.random() * nums.length)
+            uniqueNum += nums[rand]
+        })
+        return uniqueNum
+    }
+
     async login(res, payload) {
         if (res === undefined) {
             throw new Error("expected a valid 'res' object but got none ");
@@ -122,7 +141,10 @@ class AuthControler {
 
         try {
             // Create Wallet
-            const walletPayload = { email };
+            const { firstName, lastName } = this.#parseUserName(username)
+            let combo = `${firstName}${lastName === "" ? "" : "-" + lastName}`
+            const refId = `${combo}-${this.#genUniqueNumber(6)}`
+            const walletPayload = { email, first_name: firstName, last_name: lastName, ewallet_reference_id: refId };
 
             try {
                 const result = await Fetch(
@@ -171,6 +193,7 @@ class AuthControler {
                     );
                 }
             } catch (e) {
+                console.log(e)
                 sendResponse(
                     res,
                     500,

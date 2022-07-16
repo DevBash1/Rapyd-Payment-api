@@ -23,21 +23,18 @@ Router.post("/addFund", (req, res) => {
 
 
 // get
-
 Router.post("/get/:id", isLoggedIn, (req, res) => {
     const payload = req.params.id;
     Wallet.getWallet(res, payload);
 });
 
 // Id Types
-
 Router.get("/identityTypes/:country", (req, res) => {
     const payload = req.params.country;
     Wallet.getIdType(res, payload);
 });
 
 // Verify Id
-
 Router.post("/verify", isLoggedIn, (req, res) => {
     const payload = req.body;
     Wallet.verifyIdentity(res, payload);
