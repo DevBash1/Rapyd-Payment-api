@@ -13,6 +13,7 @@ const walletRouter = require("./routes/wallets.router")
 const Fetch = require("./utils/fetch")
 const { DATABASE_URL } = require("./config")
 const mongoose = require("mongoose")
+const sendResponse = require("./helpers/response")
 require("dotenv").config({ path: "./.env.development" })
 
 // Middlewares
@@ -34,6 +35,18 @@ app.get("/", (req, res) => {
 io.on('connection', (socket) => {
   console.log('a user connected');
 });
+
+// LIST ALL SUPPORTED COUNTRIES
+app.get("/api/countries", async (req, res) => {
+  try {
+    const result = await Fetch('GET', '/v1/data/countries');
+
+    res.json(result)
+
+  } catch (error) {
+    res.json('Error completing request', error);
+  }
+})
 
 // Authentication
 app.use("/api/auth", authRouter);
