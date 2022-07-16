@@ -1,5 +1,5 @@
 const { User, Wallets, Accounts, Transactions, Products } = require("../model");
-const { genHash, compareHash, genId } = require("../helpers");
+const { genHash, compareHash, genId, genUnique } = require("../helpers");
 const sendResponse = require("../helpers/response");
 const { validateEmail, validatePhonenumber } = require("../utils/validate");
 const {
@@ -36,7 +36,6 @@ class WalletController {
                 500,
                 false,
                 `Error: ${e.body.status.message}`,
-                {},
                 e.body
             );
         }
@@ -231,7 +230,14 @@ class WalletController {
     }
 
     async verifyIdentity(res, payload) {
+        const { id } = res.user;
+
         try {
+            const getWallet = await Wallets.findOne({ userId: id });
+            const walletId = getWallet.wId;
+            
+            payload.ewallet = walletId;
+            
             let result = await Fetch("POST", "/v1/identities", payload);
             let message = result.statusCode == 200 ? "success" : "failed";
             let status = result.statusCode == 200 ? true : false;
