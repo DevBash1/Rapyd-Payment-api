@@ -7,11 +7,15 @@ const User = require("./Users")
 const Wallets = require("./Wallets")
 const Transactions = require("./Transactions")
 const PaymentLinks = require("./PaymentLinks")
+const Accounts = require("./Accounts")
+const Products = require("./Products")
 
 
 module.exports = {
     User,
     Wallets,
     Transactions,
-    PaymentLinks
+    PaymentLinks,
+    Accounts,
+    Products
 }

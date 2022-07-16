@@ -1,9 +1,13 @@
-const { User } = require("../model")
-const { genHash, compareHash, genId } = require("../helpers")
-const sendResponse = require("../helpers/response")
-const { validateEmail, validatePhonenumber } = require("../utils/validate")
-const { genAccessToken, genRefreshToken } = require("../helpers/token")
-
+const { User, Wallets } = require("../model");
+const { genHash, compareHash, genId } = require("../helpers");
+const sendResponse = require("../helpers/response");
+const { validateEmail, validatePhonenumber } = require("../utils/validate");
+const { genAccessToken, genRefreshToken } = require("../helpers/token");
+const {
+    createPersonalWallet,
+    createCompanyWallet,
+} = require("../config/rapydEndpoints");
+const Fetch = require("../utils/fetch");
 
 class AuthControler {
     async login(res, payload) {
@@ -117,22 +121,65 @@ class AuthControler {
             );
 
         try {
-            // save data
-            const savedData = await User.create({
-                id: genId(),
-                username,
-                email,
-                token: "",
-                hash: genHash(password),
-            });
+            // Create Wallet
+            const walletPayload = { email };
 
-            return sendResponse(
-                res,
-                201,
-                true,
-                "user registered successfully",
-                savedData
-            );
+            try {
+                const result = await Fetch(
+                    "POST",
+                    createPersonalWallet,
+                    walletPayload
+                );
+                const status = result.statusCode == 200 ? true : false;
+
+                if (status) {
+                    const userId = genId();
+
+                    // save user data
+                    const saveUserData = await User.create({
+                        id: userId,
+                        username,
+                        email,
+                        token: "",
+                        hash: genHash(password),
+                    });
+
+                    // save wallet data
+                    const walletName =
+                        (result.body.data.first_name || "") +
+                        " " +
+                        (result.body.data.last_name || "");
+
+                    const saveWalletData = await Wallets.create({
+                        id: genId(),
+                        userId,
+                        wId: result.body.data.id,
+                        wName: walletName,
+                        wAddr: "",
+                        totalBalance: 0,
+                        verified: false,
+                        status: "unverified",
+                        createdAt: Date.now(),
+                    });
+
+                    return sendResponse(
+                        res,
+                        201,
+                        true,
+                        "user registered successfully",
+                        saveUserData
+                    );
+                }
+            } catch (e) {
+                sendResponse(
+                    res,
+                    500,
+                    false,
+                    `Something went wrong: ${e.body.status.message}`,
+                    {},
+                    {}
+                );
+            }
         } catch (e) {
             sendResponse(
                 res,

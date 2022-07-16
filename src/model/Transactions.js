@@ -1,17 +1,19 @@
-const { model, Schema } = require("mongoose")
+const { model, Schema } = require("mongoose");
 
+const transactionSchema = new Schema(
+    {
+        id: { type: String },
+        paid: { type: String },
+        totalAmount: { type: String },
+        name: { type: String },
+        email: { type: String },
+        iban: { type: String },
+        status: { type: String },
+        createdAt: { type: String },
+    },
+    { versionKey: false }
+);
 
-const transactionSchema = new Schema({
-    id: { type: String },
-    wAddr: { type: String },
-    amount: { type: String },
-    name: { type: String },
-    email: { type: String },
-    iban: { type: String },
-    status: { type: String },
-    createdAt: { type: String },
-}, { versionKey: false })
+const Transactions = model("Transactions", transactionSchema);
 
-const Transactions = model('Transactions', transactionSchema);
-
-module.exports = Transactions
+module.exports = Transactions;

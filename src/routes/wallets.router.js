@@ -6,12 +6,21 @@ const Router = express.Router();
 
 const Wallet = new WalletController()
 
-// create
+// Create Vitual Account
 
-Router.post("/create", isLoggedIn, (req, res) => {
+Router.post("/create/:productId", isLoggedIn, (req, res) => {
     const payload = req.body;
-    Wallet.createWallet(res, payload);
+    const productId = req.params.productId;
+    Wallet.createAccount(res, payload, productId);
 });
+
+// Add Fund To Vitual Account
+
+Router.post("/addFund", (req, res) => {
+    const payload = req.body;
+    Wallet.addFund(res, payload);
+});
+
 
 // get
 
@@ -22,16 +31,21 @@ Router.post("/get/:id", isLoggedIn, (req, res) => {
 
 // Id Types
 
-Router.get("/idTypes/:country", (req, res) => {
+Router.get("/identityTypes/:country", (req, res) => {
     const payload = req.params.country;
     Wallet.getIdType(res, payload);
 });
 
 // Verify Id
 
-Router.post("/verify", (req, res) => {
+Router.post("/verify", isLoggedIn, (req, res) => {
     const payload = req.body;
     Wallet.verifyIdentity(res, payload);
+});
+
+Router.all("/webhook", (req, res) => {
+    const payload = req.body;
+    Wallet.webhook(res, payload);
 });
 
 module.exports = Router
