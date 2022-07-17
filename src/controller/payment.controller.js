@@ -32,7 +32,7 @@ class PaymentController {
                 amount,
                 wId: walletId,
                 active: true,
-                createdAt: Date.now()
+                createdAt: new Date()
             }
 
             const linksaved = await PaymentLinks.create(savedData)
