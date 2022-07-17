@@ -177,7 +177,7 @@ class WalletController {
                     e.body
                 );
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     async getWallet(res, id) {
@@ -202,6 +202,7 @@ class WalletController {
                 result.body.data
             );
         } catch (e) {
+            console.log(e)
             sendResponse(res, 500, false, "failed to retrieve wallet", {});
         }
     }
@@ -235,9 +236,9 @@ class WalletController {
         try {
             const getWallet = await Wallets.findOne({ userId: id });
             const walletId = getWallet.wId;
-            
+
             payload.ewallet = walletId;
-            
+
             let result = await Fetch("POST", "/v1/identities", payload);
             let message = result.statusCode == 200 ? "success" : "failed";
             let status = result.statusCode == 200 ? true : false;
