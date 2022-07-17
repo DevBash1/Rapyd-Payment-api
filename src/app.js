@@ -11,6 +11,7 @@ const { customlimiter } = require("./middlewares/rateLimiting")
 const authRouter = require("./routes/auth.router")
 const walletRouter = require("./routes/wallets.router")
 const productRouter = require("./routes/product.router")
+const paymentLink = require("./routes/payment.router")
 const Fetch = require("./utils/fetch")
 const { DATABASE_URL } = require("./config")
 const mongoose = require("mongoose")
@@ -57,6 +58,9 @@ app.use("/api/wallet", walletRouter)
 
 // Products
 app.use("/api/product", productRouter)
+
+// PaymentLink
+app.use("/api/payment/link", paymentLink)
 
 
 const PORT = process.env.PORT || 8080;
