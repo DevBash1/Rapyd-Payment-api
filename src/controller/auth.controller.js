@@ -86,7 +86,7 @@ class AuthControler {
 
             await User.findOneAndUpdate(filter, update);
 
-            return sendResponse(res, 201, true, "Logged In successfull", {
+            return sendResponse(res, 201, true, "Logged In successful", {
                 ...userPayload,
                 accessToken,
             });

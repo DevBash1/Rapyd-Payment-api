@@ -3,6 +3,7 @@ const { model, Schema } = require("mongoose");
 const transactionSchema = new Schema(
     {
         id: { type: String },
+        linkId: { type: String },
         paid: { type: String },
         totalAmount: { type: String },
         name: { type: String },

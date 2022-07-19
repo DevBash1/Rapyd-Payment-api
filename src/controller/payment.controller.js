@@ -17,14 +17,14 @@ class PaymentController {
             const { id } = res.user
             const doesUserExist = await User.find({ id })
 
-            if (doesUserExist.length === 0) return sendResponse(res, 404, false, "UNauthorised to add link. user doesnt exists.")
+            if (doesUserExist.length === 0) return sendResponse(res, 400, false, "UNauthorised to add link. user doesnt exists.")
 
             const walletData = await Wallets.findOne({ userId: id })
             const walletId = walletData.wId;
 
             // save link
             const savedData = {
-                id: genId(),
+                id: genUnique(),
                 userId: id,
                 title,
                 country,
@@ -41,7 +41,7 @@ class PaymentController {
 
         } catch (e) {
             console.log(e);
-            sendResponse(res, 500, false, "Something went wrong creating link.")
+            sendResponse(res, 500, false, "Something went wrong while creating link.")
         }
     }
 

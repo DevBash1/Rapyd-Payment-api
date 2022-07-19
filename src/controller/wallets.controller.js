@@ -1,4 +1,11 @@
-const { User, Wallets, Accounts, Transactions, Products } = require("../model");
+const {
+    User,
+    Wallets,
+    Accounts,
+    Transactions,
+    Products,
+    PaymentLinks,
+} = require("../model");
 const { genHash, compareHash, genId, genUnique } = require("../helpers");
 const sendResponse = require("../helpers/response");
 const { validateEmail, validatePhonenumber } = require("../utils/validate");
@@ -41,25 +48,52 @@ class WalletController {
         }
     }
 
-    async createAccount(res, payload, productId) {
+    async createAccount(res, payload, paymentLinkId) {
+        if (!paymentLinkId) {
+            return sendResponse(res, 500, false, "Invalid Payment Link id", {});
+        }
+
         try {
-            const walletId = payload.ewallet;
-            const getWallet = await Wallets.findOne({ wId: walletId });
+            // Verify Payment Link and Get Price
+            let paymentPrice = "0";
+            let userId = null;
+
+            try {
+                const payLink = await PaymentLinks.findOne({
+                    id: paymentLinkId,
+                });
+                if (!payLink) {
+                    return sendResponse(
+                        res,
+                        500,
+                        false,
+                        "Payment Link Not Found",
+                        {}
+                    );
+                }
+
+                // Get Data From Payment Link
+                paymentPrice = payLink.amount;
+                userId = payLink.userId;
+                payload.currency = payLink.currency;
+                payload.country = payLink.country;
+                payload.description = payLink.title;
+                payload.ewallet = payLink.wId;
+            } catch (e) {
+                return sendResponse(
+                    res,
+                    500,
+                    false,
+                    "Payment Link Not Found",
+                    {}
+                );
+            }
+
+            // Get Wallet
+            const getWallet = await Wallets.findOne({ userId });
 
             if (!getWallet) {
-                return sendResponse(res, 500, false, "wallet id not found", {});
-            }
-
-            // Make sure this request came from the right user
-            const { id } = res.user;
-            const { userId } = getWallet;
-
-            if (id !== userId) {
-                return sendResponse(res, 500, false, "Access Denied", {});
-            }
-
-            if (!productId) {
-                return sendResponse(res, 500, false, "Invalid product id", {});
+                return sendResponse(res, 500, false, "Wallet Id Not Found", {});
             }
 
             // await Products.create({
@@ -71,27 +105,6 @@ class WalletController {
             //     description: "A Fresh Green Apple",
             //     image: ""
             // });
-
-            // Get Product Price
-            let productPrice = "0";
-            try {
-                const getProduct = await Products.findOne({
-                    id: productId,
-                    userId,
-                });
-                if (!getProduct) {
-                    return sendResponse(
-                        res,
-                        500,
-                        false,
-                        "Product Not Found",
-                        {}
-                    );
-                }
-                productPrice = getProduct.price;
-            } catch (e) {
-                return sendResponse(res, 500, false, "Product Not Found", {});
-            }
 
             const name = payload.name || "";
             const email = payload.email || "";
@@ -124,26 +137,28 @@ class WalletController {
                     const currency = result.body.data.currency || "";
                     const accountId = result.body.data.id;
                     const description = result.body.data.description || "";
+                    const walletId = payload.ewallet;
 
                     try {
-                        const addAccount = await Accounts.create({
-                            id: accountId,
-                            userId,
-                            walletId,
-                            iban,
-                            county,
-                            currency,
-                            description,
-                            createdAt: Date.now(),
-                        });
+                        // const addAccount = await Accounts.create({
+                        //     id: accountId,
+                        //     userId,
+                        //     walletId,
+                        //     iban,
+                        //     county,
+                        //     currency,
+                        //     description,
+                        //     createdAt: Date.now(),
+                        // });
 
                         // Create Empty Transaction
                         const createTransaction = await Transactions.create({
                             id: accountId,
+                            linkId: paymentLinkId,
                             name,
                             email,
                             paid: "0",
-                            totalAmount: productPrice,
+                            totalAmount: paymentPrice,
                             iban,
                             createdAt: Date.now(),
                             status: "Created",
@@ -177,7 +192,7 @@ class WalletController {
                     e.body
                 );
             }
-        } catch (e) { }
+        } catch (e) {}
     }
 
     async getWallet(res, id) {
@@ -202,7 +217,6 @@ class WalletController {
                 result.body.data
             );
         } catch (e) {
-            console.log(e)
             sendResponse(res, 500, false, "failed to retrieve wallet", {});
         }
     }
@@ -285,14 +299,38 @@ class WalletController {
             } catch (e) {
                 console.log(e);
             }
-        } else if (payload.type === "ISSUING_DEPOSIT_COMPLETED") {
+        } else if (
+            payload.type === "ISSUING_DEPOSIT_COMPLETED" &&
+            payload.status === "NEW"
+        ) {
             // Bank Account Deposit
 
-            const iban = payload.data.bank_account.account_number;
-            const getAccount = await Accounts.findOne({ iban });
+            const accountId = payload.data.issued_account_id;
+            const getTransaction = await Transactions.findOne({
+                id: accountId,
+            });
 
-            // Check if iban exists in Collection
-            if (getAccount) {
+            // Check if Transaction Exists
+            if (getTransaction) {
+                const paid = Number(getTransaction.paid);
+                const total = Number(getTransaction.totalAmount);
+
+                const amount = Number(payload.data.amount);
+
+                const newPaid = paid + amount;
+
+                // Check If Payment is Complete
+                if(newPaid >= total){
+                    await Transactions.updateOne({ id: accountId }, {
+                        paid: newPaid,
+                        status: "Paid",
+                    });
+                }else{
+                    await Transactions.updateOne({ id: accountId }, {
+                        paid: newPaid,
+                        status: "Updated",
+                    });
+                }
             }
         }
 

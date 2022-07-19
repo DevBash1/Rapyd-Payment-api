@@ -1,4 +1,4 @@
-const { randomUUID } = require("crypto");
+const { randomUUID, randomBytes } = require("crypto");
 const bcryptjs = require("bcryptjs");
 
 const genId = () => randomUUID();
@@ -13,7 +13,7 @@ const compareHash = (string, hash) => {
 
 const genUnique = () => {
   try {
-      return crypto.randomBytes(5).toString("hex");
+      return randomBytes(5).toString("hex");
   } catch (error) {
       console.error("Error generating salt");
       throw error;
