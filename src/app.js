@@ -16,7 +16,7 @@ const Fetch = require("./utils/fetch")
 const { DATABASE_URL } = require("./config")
 const mongoose = require("mongoose")
 const sendResponse = require("./helpers/response")
-require("dotenv").config({ path: "./.env.development" })
+require("dotenv").config({ path: "./.env" })
 
 // Middlewares
 app.use(cors({
@@ -54,13 +54,13 @@ app.get("/api/countries", async (req, res) => {
 app.use("/api/auth", authRouter);
 
 // Wallets
-app.use("/api/wallet", walletRouter)
+app.use("/api/wallet", walletRouter);
 
 // Products
-app.use("/api/product", productRouter)
+app.use("/api/product", productRouter);
 
 // PaymentLink
-app.use("/api/payment/link", paymentLink)
+app.use("/api/payment/link", paymentLink);
 
 
 const PORT = process.env.PORT || 8080;

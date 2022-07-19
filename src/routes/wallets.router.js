@@ -8,10 +8,10 @@ const Wallet = new WalletController()
 
 // Create Vitual Account
 
-Router.post("/create/:productId", isLoggedIn, (req, res) => {
+Router.post("/create/:paymentLinkId", (req, res) => {
     const payload = req.body;
-    const productId = req.params.productId;
-    Wallet.createAccount(res, payload, productId);
+    const paymentLinkId = req.params.paymentLinkId;
+    Wallet.createAccount(res, payload, paymentLinkId);
 });
 
 // Add Fund To Vitual Account
